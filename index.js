@@ -12,22 +12,22 @@ const error_day = document.querySelector(".error-day");
 
 const submitBtn = document.querySelector(".submit-btn");
 
-let isValid = false;
-submitBtn.addEventListener('click', calculateAge);
+
+
+function validateInputs() {
+    let isValid = true;
+
 
 input_day.addEventListener('input', e => {
     if (input_day.value > 31) {
         error_day.textContent = "Must be a valid day";
-        isValid;
-        return;
+        isValid = false;    
     } else {
-        isValid = true;
         error_day.textContent = '';
     }
     if (+input_day.value === 0) {
         error_day.textContent = "This field is required";
-        isValid;
-        return;
+        isValid = false;     
     }
 });
 
@@ -35,41 +35,46 @@ input_day.addEventListener('input', e => {
 input_month.addEventListener('input', e => {
     if (input_month.value > 12) {
         error_month.textContent = "Must be a valid month";
-        isValid;
-        return;
+        isValid = false;
     } else {
-        isValid = true;
         error_month.textContent = '';
     }
     if (+input_month.value === 0) {
         error_month.textContent = "This field is required";
-        isValid;
-        return;
+        isValid = false;
+
     }
 });
 
 
+const currentYear = new Date().getFullYear();
+
 input_year.addEventListener('input', e => {
-    if (input_year.value > 2024) {
+    if (input_year.value > currentYear) {
         error_year.textContent = "Must be a valid year";
-        isValid;
-        return;
+        isValid = false;
+        
     } else {
-        isValid = true;
         error_year.textContent = '';
     }
     if (+input_year.value === 0) {
         error_year.textContent = "This field is required";
-        isValid;
-        return;
+        isValid = false;
     }
 });
 
+return isValid;
+
+}
 
 function calculateAge() {
-    const day = document.getElementById('day').value;
-    const month = document.getElementById('month').value;
-    const year = document.getElementById('year').value;
+    if (!validateInputs()) {
+        return;
+    }
+
+    const day = input_day.value;
+    const month = input_month.value;
+    const year = input_year.value;
 
     const birthDate = new Date(year, month - 1, day);
     const today = new Date();
@@ -78,9 +83,18 @@ function calculateAge() {
     let ageMonths = today.getMonth() - birthDate.getMonth();
     let ageDays = today.getDate() - birthDate.getDate();
 
+    if (ageDays < 0) {
+        ageMonths--;
+        ageDays += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+       
+    }
+    if (ageMonths < 0) {
+        ageYears--;
+        ageMonths +=12;
+    }
+    output_year.innerText = ageYears;
+    output_months.innerText = ageMonths;
+    output_days.innerText = ageDays;
 }
 
-
-document.getElementById('years').innerText = ageYears;
-document.getElementById('months').innerText = ageMonths;
-document.getElementById('days').innerText = ageDays;
+submitBtn.addEventListener('click', calculateAge);

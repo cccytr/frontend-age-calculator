@@ -99,3 +99,18 @@ small {
     font-weight: 550;
     margin-right: auto;
 }
+
+
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1440px;
+    }
+    
+    .date-input {
+        width: 50%;
+    }
+
+    .output {
+        width: 50%;
+    }
+}
